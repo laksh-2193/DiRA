@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Code Scanner</title>
+</head>
+<body>
+    <h1>QR Code Scanner</h1>
+    <img src="{{ url_for('video_feed') }}">
+    <p>Decoded Data: <span id="decoded-data">{{ decoded_data }}</span></p>
+
+    <script>
+        function updateDecodedData() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/qrscanned", true);
+
+            xhr.onreadystatechange = function () {
+               try {
+
+
+        var decodedData = atob(xhr.responseText);
+        document.getElementById("decoded-data").innerText = decodedData;
+        if(decodedData!="")
+        {
+        window.location="/patientdetails?userInfo="+xhr.responseText;
+        }
+
+    } catch (error) {
+
+        console.error("Error decoding the response:", error);
+        document.getElementById("decoded-data").innerText = error;
+    }
+            };
+
+            xhr.send();
+        }
+
+
+        setInterval(updateDecodedData, 200);
+    </script>
+</body>
+</html>
+
